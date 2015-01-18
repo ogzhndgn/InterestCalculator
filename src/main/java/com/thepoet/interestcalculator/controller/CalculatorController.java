@@ -27,6 +27,7 @@ public class CalculatorController {
         String period = this.getParameter(request.getParameter("period"), "32");
         String repetitionCount = this.getParameter(request.getParameter("repetitionCount"), "1");
         String jsonResult = this.getJSON(startAmount, periodicAmount, interestRate, period, repetitionCount);
+        //TODO don't use modelandview here
         mav.addObject("jsonResult", jsonResult);
         return mav;
     }
