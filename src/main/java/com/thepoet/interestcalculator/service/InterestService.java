@@ -2,8 +2,6 @@ package com.thepoet.interestcalculator.service;
 
 import com.google.gson.Gson;
 import com.thepoet.interestcalculator.model.Interest;
-import org.json.simple.JSONObject;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.http.converter.json.GsonFactoryBean;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +15,16 @@ public class InterestService {
     private static final int DAYS_IN_A_YEAR = 365;
     private static final double TAX_AMOUNT = 0.85;
 
-    public List<Interest> calculate(BigDecimal startAmount, BigDecimal periodicAmount, BigDecimal interestRate, int periodInDays, int repetitionCount) {
+    public List<Interest> calculate(BigDecimal capital, BigDecimal periodicAmount, BigDecimal interestRate, int periodInDays, int repetitionCount) {
         List<Interest> interestList = new ArrayList<>();
         for (int period = 1; period <= repetitionCount; period++) {
-            BigDecimal interestInAYear = this.calculateInterestInAYear(startAmount, interestRate);
+            BigDecimal interestInAYear = this.calculateInterestInAYear(capital, interestRate);
             BigDecimal grossInterestInPeriod = this.calculateGrossInterestInPeriod(interestInAYear, periodInDays);
             BigDecimal netInterestInPeriod = this.calculateNetInterestInPeriod(grossInterestInPeriod);
-            BigDecimal netTotalInPeriod = startAmount.add(netInterestInPeriod);
-            BigDecimal grossTotalInPeriod = startAmount.add(grossInterestInPeriod);
-            interestList.add(createInterest(period, startAmount, grossInterestInPeriod, netInterestInPeriod, netTotalInPeriod, grossTotalInPeriod, periodicAmount));
-            startAmount = startAmount.add(netInterestInPeriod).add(periodicAmount);
+            BigDecimal netTotalInPeriod = capital.add(netInterestInPeriod);
+            BigDecimal grossTotalInPeriod = capital.add(grossInterestInPeriod);
+            interestList.add(createInterest(period, capital, grossInterestInPeriod, netInterestInPeriod, netTotalInPeriod, grossTotalInPeriod, periodicAmount));
+            capital = capital.add(netInterestInPeriod).add(periodicAmount);
         }
         return interestList;
     }
@@ -39,10 +37,10 @@ public class InterestService {
         return gson.toJson(interestList);
     }
 
-    private Interest createInterest(int period, BigDecimal startAmount, BigDecimal grossInterestInPeriod, BigDecimal netInterestInPeriod, BigDecimal netTotalInPeriod, BigDecimal grossTotalInPeriod, BigDecimal periodicAmount) {
+    private Interest createInterest(int period, BigDecimal capital, BigDecimal grossInterestInPeriod, BigDecimal netInterestInPeriod, BigDecimal netTotalInPeriod, BigDecimal grossTotalInPeriod, BigDecimal periodicAmount) {
         Interest interest = new Interest();
         interest.setPeriod(period);
-        interest.setCapital(startAmount);
+        interest.setCapital(capital);
         interest.setNetInterestInPeriod(netInterestInPeriod);
         interest.setGrossInterestInPeriod(grossInterestInPeriod);
         interest.setNetTotalInPeriod(netTotalInPeriod);
