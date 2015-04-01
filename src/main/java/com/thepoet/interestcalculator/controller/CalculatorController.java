@@ -18,7 +18,7 @@ public class CalculatorController {
     @Autowired
     ErrorResponseUtil errorResponseUtil;
 
-    @RequestMapping(value = "/api", method = RequestMethod.GET)
+    @RequestMapping(value = "/api", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView apiGet(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("interest_api_json");
         String jsonResult;

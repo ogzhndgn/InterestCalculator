@@ -17,36 +17,11 @@ public class InterestUtil {
     InterestService interestService;
 
     private List<Interest> getList(String capital, String periodicAmount, String interestRate, String period, String repetitionCount) throws InterestException {
-        BigDecimal capitalBD;
-        try {
-            capitalBD = new BigDecimal(capital);
-        } catch (NumberFormatException e) {
-            throw new InterestException(InterestErrorCode.ERROR_CODE_101);
-        }
-        BigDecimal periodicAmountBD;
-        try {
-            periodicAmountBD = new BigDecimal(periodicAmount);
-        } catch (NumberFormatException e) {
-            throw new InterestException(InterestErrorCode.ERROR_CODE_102);
-        }
-        BigDecimal interestRateBD;
-        try {
-            interestRateBD = new BigDecimal(interestRate);
-        } catch (NumberFormatException e) {
-            throw new InterestException(InterestErrorCode.ERROR_CODE_103);
-        }
-        int periodInt;
-        try {
-            periodInt = Integer.parseInt(period);
-        } catch (NumberFormatException e) {
-            throw new InterestException(InterestErrorCode.ERROR_CODE_104);
-        }
-        int repetitionCountInt;
-        try {
-            repetitionCountInt = Integer.parseInt(repetitionCount);
-        } catch (NumberFormatException e) {
-            throw new InterestException(InterestErrorCode.ERROR_CODE_105);
-        }
+        BigDecimal capitalBD = getCapital(capital);
+        BigDecimal periodicAmountBD = getPeriodicAmount(periodicAmount);
+        BigDecimal interestRateBD = getInterestRate(interestRate);
+        int periodInt = getPeriod(period);
+        int repetitionCountInt = getRepetitionCount(repetitionCount);
         return interestService.calculate(capitalBD, periodicAmountBD, interestRateBD, periodInt, repetitionCountInt);
     }
 
@@ -62,4 +37,53 @@ public class InterestUtil {
         return defaultValue;
     }
 
+    private int getRepetitionCount(String repetitionCount) throws InterestException {
+        int repetitionCountInt;
+        try {
+            repetitionCountInt = Integer.parseInt(repetitionCount);
+        } catch (NumberFormatException e) {
+            throw new InterestException(InterestErrorCode.ERROR_CODE_105);
+        }
+        return repetitionCountInt;
+    }
+
+    private int getPeriod(String period) throws InterestException {
+        int periodInt;
+        try {
+            periodInt = Integer.parseInt(period);
+        } catch (NumberFormatException e) {
+            throw new InterestException(InterestErrorCode.ERROR_CODE_104);
+        }
+        return periodInt;
+    }
+
+    private BigDecimal getInterestRate(String interestRate) throws InterestException {
+        BigDecimal interestRateBD;
+        try {
+            interestRateBD = new BigDecimal(interestRate);
+        } catch (NumberFormatException e) {
+            throw new InterestException(InterestErrorCode.ERROR_CODE_103);
+        }
+        return interestRateBD;
+    }
+
+    private BigDecimal getPeriodicAmount(String periodicAmount) throws InterestException {
+        BigDecimal periodicAmountBD;
+        try {
+            periodicAmountBD = new BigDecimal(periodicAmount);
+        } catch (NumberFormatException e) {
+            throw new InterestException(InterestErrorCode.ERROR_CODE_102);
+        }
+        return periodicAmountBD;
+    }
+
+    private BigDecimal getCapital(String capital) throws InterestException {
+        BigDecimal capitalBD;
+        try {
+            capitalBD = new BigDecimal(capital);
+        } catch (NumberFormatException e) {
+            throw new InterestException(InterestErrorCode.ERROR_CODE_101);
+        }
+        return capitalBD;
+    }
 }
